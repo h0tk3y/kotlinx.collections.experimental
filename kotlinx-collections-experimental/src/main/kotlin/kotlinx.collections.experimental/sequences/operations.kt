@@ -7,9 +7,23 @@ public fun <T, R> Sequence<T>.map_c(transform: (T) -> R): Sequence<R> =
             }
         }
 
+public fun <T, R> Sequence<T>.map_cn(transform: (T) -> R): Sequence<R> =
+        generateNested {
+            for (element in this@map_cn) {
+                yield(transform(element))
+            }
+        }
+
 public inline fun <T, R> Sequence<T>.map_ci(crossinline transform: (T) -> R): Sequence<R> =
         generate {
             for (element in this@map_ci) {
+                yield(transform(element))
+            }
+        }
+
+public inline fun <T, R> Sequence<T>.map_cin(crossinline transform: (T) -> R): Sequence<R> =
+        generateNested {
+            for (element in this@map_cin) {
                 yield(transform(element))
             }
         }
@@ -26,9 +40,31 @@ public fun <T> Sequence<T>.filter_c(predicate: (T) -> Boolean): Sequence<T> =
             }
         }
 
+public fun <T> Sequence<T>.filter_cn(predicate: (T) -> Boolean): Sequence<T> =
+        generateNested {
+            for (element in this@filter_cn) {
+//            val iterator = this@filter_c.iterator()
+//            while (iterator.hasNext()) {
+//                val element = iterator.next()
+                if (predicate(element)) yield(element)
+
+            }
+        }
+
+
 public inline fun <T> Sequence<T>.filter_ci(crossinline predicate: (T) -> Boolean): Sequence<T> =
         generate {
             val iterator = this@filter_ci.iterator()
+            while (iterator.hasNext()) {
+                val element = iterator.next()
+                if (predicate(element)) yield(element)
+
+            }
+        }
+
+public inline fun <T> Sequence<T>.filter_cin(crossinline predicate: (T) -> Boolean): Sequence<T> =
+        generateNested {
+            val iterator = this@filter_cin.iterator()
             while (iterator.hasNext()) {
                 val element = iterator.next()
                 if (predicate(element)) yield(element)

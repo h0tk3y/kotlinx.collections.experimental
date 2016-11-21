@@ -23,8 +23,14 @@ open class SequenceCoroutineOperations : SequenceBenchmarksBase() {
     @Benchmark fun filter_c(blackhole: Blackhole) {
         sequence.filter_c { it % 3 == 0 }.consume(blackhole)
     }
+    @Benchmark fun filter_cn(blackhole: Blackhole) {
+        sequence.filter_cn { it % 3 == 0 }.consume(blackhole)
+    }
     @Benchmark fun filter_ci(blackhole: Blackhole) {
         sequence.filter_ci { it % 3 == 0 }.consume(blackhole)
+    }
+    @Benchmark fun filter_cin(blackhole: Blackhole) {
+        sequence.filter_cin { it % 3 == 0 }.consume(blackhole)
     }
 
     @Benchmark fun map(blackhole: Blackhole) {
@@ -43,11 +49,27 @@ open class SequenceCoroutineOperations : SequenceBenchmarksBase() {
         }
         sequence.consume(blackhole)
     }
+    @Benchmark fun map_cn(blackhole: Blackhole) {
+        val sequence = when (counter++ % 3) {
+            0 -> sequence.map_cn { it % 3 }
+            1 -> sequence.map_cn { it % 5 }
+            else -> sequence.map_cn { it + 10 }
+        }
+        sequence.consume(blackhole)
+    }
     @Benchmark fun map_ci(blackhole: Blackhole) {
         val sequence = when (counter++ % 3) {
             0 -> sequence.map_ci { it % 3 }
             1 -> sequence.map_ci { it % 5 }
             else -> sequence.map_ci { it + 10 }
+        }
+        sequence.consume(blackhole)
+    }
+    @Benchmark fun map_cin(blackhole: Blackhole) {
+        val sequence = when (counter++ % 3) {
+            0 -> sequence.map_cin { it % 3 }
+            1 -> sequence.map_cin { it % 5 }
+            else -> sequence.map_cin { it + 10 }
         }
         sequence.consume(blackhole)
     }
